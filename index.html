@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FDP 2026 — Certificate Portal | SRM Institute of Science &amp; Technology</title>
+<style>
+  :root{
+    --navy:#0f2159;
+    --navy-deep:#081335;
+    --gold:#d99a1b;
+    --gold-soft:#f0c14b;
+    --cream:#fbf7ee;
+    --ink:#1c2333;
+    --muted:#6b7280;
+    --line:#e4dcc8;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Georgia', 'Iowan Old Style', 'Palatino Linotype', serif;
+    background:var(--cream);
+    color:var(--ink);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(217,154,27,0.07), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(15,33,89,0.06), transparent 45%);
+  }
+
+  /* ===== Header ===== */
+  header{
+    background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color:#fff;
+    padding:38px 6vw 30px;
+    border-bottom:5px solid var(--gold);
+    position:relative;
+  }
+  .crest-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  .crest{
+    width:58px;height:58px;border-radius:50%;
+    border:2px solid var(--gold-soft);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Times New Roman', serif;
+    font-weight:700;font-size:22px;color:var(--gold-soft);
+    flex-shrink:0;
+    background:rgba(255,255,255,0.03);
+  }
+  .org-name{
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin:0 0 4px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  header h1{
+    margin:0;
+    font-size:clamp(22px, 3vw, 32px);
+    font-weight:700;
+    letter-spacing:0.01em;
+    line-height:1.25;
+  }
+  .subline{
+    margin:10px 0 0;
+    max-width:1100px;
+    margin-left:auto;margin-right:auto;
+    color:rgba(255,255,255,0.78);
+    font-size:15px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    padding-left:76px;
+  }
+  .subline b{color:var(--gold-soft);font-weight:600;}
+
+  /* ===== Main ===== */
+  main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:34px 6vw 70px;
+  }
+
+  .panel-top{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    align-items:flex-end;
+    justify-content:space-between;
+    margin-bottom:22px;
+  }
+  .panel-top h2{
+    font-size:20px;
+    margin:0 0 4px;
+    color:var(--navy);
+  }
+  .panel-top p{
+    margin:0;
+    color:var(--muted);
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:13.5px;
+  }
+  .count-badge{
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:12.5px;
+    color:var(--navy);
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 14px;
+    white-space:nowrap;
+  }
+  .count-badge strong{color:var(--gold);}
+
+  .search-wrap{
+    position:relative;
+    margin-bottom:22px;
+  }
+  .search-wrap input{
+    width:100%;
+    padding:14px 18px 14px 44px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-size:15px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    background:#fff;
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .search-wrap input:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(217,154,27,0.15);
+  }
+  .search-wrap svg{
+    position:absolute;left:15px;top:50%;
+    transform:translateY(-50%);
+    width:17px;height:17px;
+    color:var(--muted);
+  }
+
+  .table-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(15,33,89,0.04);
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+  }
+  thead th{
+    text-align:left;
+    background:var(--navy);
+    color:#fff;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:600;
+    padding:14px 16px;
+  }
+  thead th.num{width:56px;text-align:center;}
+  thead th.action{width:130px;text-align:center;}
+
+  tbody tr{
+    border-bottom:1px solid var(--line);
+    transition:background .12s;
+  }
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#fbf6e8;}
+
+  tbody td{
+    padding:13px 16px;
+    font-size:14.5px;
+    vertical-align:middle;
+  }
+  td.num{text-align:center;color:var(--muted);font-family:Georgia,serif;font-size:13.5px;}
+  td.action{text-align:center;}
+
+  .p-name{
+    color:var(--navy);
+    font-weight:700;
+    text-decoration:none;
+    font-family:Georgia,serif;
+    font-size:16px;
+    border-bottom:1px dotted var(--gold);
+    cursor:pointer;
+  }
+  .p-name:hover{color:var(--gold);}
+
+  .p-inst{color:var(--ink);}
+  .p-city{color:var(--muted);font-size:13px;}
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--navy);
+    color:#fff;
+    text-decoration:none;
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:6px;
+    transition:background .15s, transform .1s;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--gold);color:var(--navy-deep);}
+  .btn:active{transform:scale(0.97);}
+  .btn svg{width:13px;height:13px;}
+
+  .empty-state{
+    display:none;
+    text-align:center;
+    padding:50px 20px;
+    color:var(--muted);
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    font-size:14.5px;
+  }
+
+  footer{
+    text-align:center;
+    padding:26px 6vw 40px;
+    font-family:'Helvetica Neue', Arial, sans-serif;
+    color:var(--muted);
+    font-size:12.5px;
+  }
+  footer .rule{
+    width:60px;height:2px;background:var(--gold);
+    margin:0 auto 14px;
+  }
+
+  @media (max-width: 640px){
+    .subline{padding-left:0;}
+    thead th.action{width:auto;}
+    .btn span.btn-label{display:none;}
+    .btn{padding:8px 10px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crest-row">
+    <div class="crest">SRM</div>
+    <div>
+      <p class="org-name">SRM Institute of Science &amp; Technology · Tiruchirappalli</p>
+      <h1>Certificate of Participation — Download Portal</h1>
+    </div>
+  </div>
+  <p class="subline">One Week Online Faculty Development Programme on <b>&ldquo;Applied AI and Data Science: Techniques, Tools and Research&rdquo;</b> &middot; 13&ndash;17 July 2026 &middot; Department of Artificial Intelligence and Data Science, School of Computing</p>
+</header>
+
+<main>
+  <div class="panel-top">
+    <div>
+      <h2>Participant Directory</h2>
+      <p>Find your name below and click it — or use the download button — to save your certificate as a PDF.</p>
+    </div>
+    <span class="count-badge">Showing <strong id="visibleCount">88</strong> of 88 participants</span>
+  </div>
+
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input type="text" id="searchInput" placeholder="Search by name, college, or city…" autocomplete="off">
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Participant Name</th>
+          <th>Institution</th>
+          <th>City / State</th>
+          <th class="action">Certificate</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState">No participants match your search.</div>
+  </div>
+</main>
+
+<footer>
+  <div class="rule"></div>
+  Issued by the Department of Artificial Intelligence and Data Science, School of Computing<br>
+  SRM Institute of Science &amp; Technology, Tiruchirappalli
+</footer>
+
+<script>
+const participants = [
+        {"sno": 1, "name": 'R.Geethanjali', "inst": 'Mount Zion College of Engineering and Technology', "city": 'Pudukkottai', "file": 'certs/001_R_Geethanjali.pdf'},
+        {"sno": 2, "name": 'Ali Baig Mohammad', "inst": 'REVA University', "city": 'Bengaluru', "file": 'certs/002_Ali_Baig_Mohammad.pdf'},
+        {"sno": 3, "name": 'Ann Titta T M', "inst": 'Saintgits College of Engineering', "city": 'Kottayam', "file": 'certs/003_Ann_Titta_T_M.pdf'},
+        {"sno": 4, "name": 'Anugraha Saji', "inst": 'Saintgits College of Engineering (Autonomous )', "city": 'Kerala', "file": 'certs/004_Anugraha_Saji.pdf'},
+        {"sno": 5, "name": 'SWAMINATHAN G', "inst": 'MOUNT ZION COLLEGE OF ENGINEERING AND TECHNOLOGY', "city": 'Pudukkottai', "file": 'certs/005_SWAMINATHAN_G.pdf'},
+        {"sno": 6, "name": 'Abinaya T', "inst": 'Imayam College of Engineering', "city": 'Tiruchirappalli', "file": 'certs/006_Abinaya_T.pdf'},
+        {"sno": 7, "name": 'AMEETH BASHA I.', "inst": 'Sri Venkateswara College of Engineering and Technology', "city": 'Thiruvallur', "file": 'certs/007_AMEETH_BASHA_I.pdf'},
+        {"sno": 8, "name": 'Salini Dev P V', "inst": 'Viswajyothi college of Engineering and Technology', "city": 'Kerala', "file": 'certs/008_Salini_Dev_P_V.pdf'},
+        {"sno": 9, "name": 'Shibu K R', "inst": 'Saintgits College of Engineering', "city": 'Kerala', "file": 'certs/009_Shibu_K_R.pdf'},
+        {"sno": 10, "name": 'Liz George', "inst": "St. Joseph's College of Engineering & Technology", "city": 'Kerala', "file": 'certs/010_Liz_George.pdf'},
+        {"sno": 11, "name": 'Arunkumar N', "inst": 'Imayam College of Engineering', "city": 'Trichy', "file": 'certs/011_Arunkumar_N.pdf'},
+        {"sno": 12, "name": 'HEMA MALINI A', "inst": 'Imayam College of Engineering', "city": 'Tiruchirappalli', "file": 'certs/012_HEMA_MALINI_A.pdf'},
+        {"sno": 13, "name": 'Divya v.v', "inst": 'Saintgits College of Engineering', "city": 'Kerala', "file": 'certs/013_Divya_v_v.pdf'},
+        {"sno": 14, "name": 'Lumy Joseph', "inst": 'Marian College Kuttikkanam Autonomous', "city": 'Kerala', "file": 'certs/014_Lumy_Joseph.pdf'},
+        {"sno": 15, "name": 'Jesline Joseph', "inst": 'Viswajyothi College of Engineering and Technology', "city": 'Kerala', "file": 'certs/015_Jesline_Joseph.pdf'},
+        {"sno": 16, "name": 'Tiny Molly V', "inst": 'Viswajyothi College of Engineering and Technology', "city": 'Kerala', "file": 'certs/016_Tiny_Molly_V.pdf'},
+        {"sno": 17, "name": 'Juliet A Murali', "inst": 'Viswajyothi College of Engineering and Technology', "city": 'Kerala', "file": 'certs/017_Juliet_A_Murali.pdf'},
+        {"sno": 18, "name": 'Jerin Mathew', "inst": 'St. Joseph College of Engineering and Technology', "city": 'Kottayam', "file": 'certs/018_Jerin_Mathew.pdf'},
+        {"sno": 19, "name": 'C.Matheshwari', "inst": 'Idhaya Engineering College for Women', "city": 'Kallakurichi', "file": 'certs/019_C_Matheshwari.pdf'},
+        {"sno": 20, "name": 'Agilaharshini T', "inst": 'Sathyabama Institute of Science and Technology', "city": 'Chennai', "file": 'certs/020_Agilaharshini_T.pdf'},
+        {"sno": 21, "name": 'Porchelvi D', "inst": 'SRM TRP ENGINEERING COLLEGE', "city": 'Tiruchirappalli', "file": 'certs/021_Porchelvi_D.pdf'},
+        {"sno": 22, "name": 'S. Nithya', "inst": 'Presidency University', "city": 'Bangalore', "file": 'certs/022_S_Nithya.pdf'},
+        {"sno": 23, "name": 'Krishnapriya Arangath', "inst": 'KMM College', "city": 'Kerala', "file": 'certs/023_Krishnapriya_Arangath.pdf'},
+        {"sno": 24, "name": 'D.SUDHANDHIRA', "inst": 'Adaikala Matha College', "city": 'Thanjavur', "file": 'certs/024_D_SUDHANDHIRA.pdf'},
+        {"sno": 25, "name": 'Priya Kamath B', "inst": 'Manipal Institute of Technology', "city": 'Karnataka', "file": 'certs/025_Priya_Kamath_B.pdf'},
+        {"sno": 26, "name": 'S.RADHIMEENAKSHI', "inst": 'Tiruppur Kumaran College for Women', "city": 'Tiruppur', "file": 'certs/026_S_RADHIMEENAKSHI.pdf'},
+        {"sno": 27, "name": 'Anuradha Diwan', "inst": 'Maharaja Agrasen International College', "city": 'Raipur', "file": 'certs/027_Anuradha_Diwan.pdf'},
+        {"sno": 28, "name": 'Neethu Tressa', "inst": 'Amity University', "city": 'Bengaluru', "file": 'certs/028_Neethu_Tressa.pdf'},
+        {"sno": 29, "name": 'SenthilKumar Gandhidoss', "inst": 'PERIYAR MANIAMMAI INSTITUTE OF SCIENCE & TECHNOLOGY', "city": 'Thanjavur', "file": 'certs/029_SenthilKumar_Gandhidoss.pdf'},
+        {"sno": 30, "name": 'IYSWARIYA.M', "inst": 'PERIYAR MANIAMMAI INSTITUTE OF SCIENCE AND TECHNOLOGY', "city": 'Thanjavur', "file": 'certs/030_IYSWARIYA_M.pdf'},
+        {"sno": 31, "name": 'B. Backiyalakshmi', "inst": 'Queens College of Arts and Science for Women', "city": 'Pudukkottai', "file": 'certs/031_B_Backiyalakshmi.pdf'},
+        {"sno": 32, "name": 'V.UMAMAHESWARI', "inst": 'MARUTHUPANDIYAR COLLEGE', "city": 'Thanjavur', "file": 'certs/032_V_UMAMAHESWARI.pdf'},
+        {"sno": 33, "name": 'Mansi Gera', "inst": 'IKGPTU Kapurthala', "city": 'Hoshiarpur', "file": 'certs/033_Mansi_Gera.pdf'},
+        {"sno": 34, "name": 'Aruna Raji R', "inst": 'Alagappa University', "city": 'Tiruchirappalli', "file": 'certs/034_Aruna_Raji_R.pdf'},
+        {"sno": 35, "name": 'Pragya dubey', "inst": 'School of pharmacy Indrashil University', "city": 'Ahmedabad', "file": 'certs/035_Pragya_dubey.pdf'},
+        {"sno": 36, "name": 'Priti V. Bhagat', "inst": 'St. Vincent Pallotti College of Engineering & Technology', "city": 'Nagpur', "file": 'certs/036_Priti_V_Bhagat.pdf'},
+        {"sno": 37, "name": 'Nivetha Raju', "inst": 'Kumaraguru College of Technology', "city": 'Coimbatore', "file": 'certs/037_Nivetha_Raju.pdf'},
+        {"sno": 38, "name": 'STALIN VICTOR B', "inst": 'Sathyabama Institute of Science and Technology', "city": 'Chennai', "file": 'certs/038_STALIN_VICTOR_B.pdf'},
+        {"sno": 39, "name": 'Sivasankari S', "inst": 'Adaikala Matha College', "city": 'Thanjavur', "file": 'certs/039_Sivasankari_S.pdf'},
+        {"sno": 40, "name": 'ANAND HARIDAS', "inst": 'PRESIDENCY UNIVERSITY', "city": 'Bangalore', "file": 'certs/040_ANAND_HARIDAS.pdf'},
+        {"sno": 41, "name": 'Mohammed Sadique Khaja Sheikh', "inst": 'Guru Nanak Institute of Technology', "city": 'Nagpur', "file": 'certs/041_Mohammed_Sadique_Khaja_Sheikh.pdf'},
+        {"sno": 42, "name": 'Ravneet kaur', "inst": 'IKGPTU Kapurthala', "city": 'Hoshiarpur', "file": 'certs/042_Ravneet_kaur.pdf'},
+        {"sno": 43, "name": 'Deepansh Raj', "inst": 'Sharda University', "city": 'Uttar Pradesh', "file": 'certs/043_Deepansh_Raj.pdf'},
+        {"sno": 44, "name": 'P. KALAIMAGAL', "inst": 'A. V. V. M SRI PUSHPAM COLLEGE(AUTONOMOUS)', "city": 'Thanjavur', "file": 'certs/044_P_KALAIMAGAL.pdf'},
+        {"sno": 45, "name": 'DEVIKA.S', "inst": 'Mountzion College of Engineering and Technology', "city": 'Pudukkottai', "file": 'certs/045_DEVIKA_S.pdf'},
+        {"sno": 46, "name": 'A. JONI', "inst": 'SARDAR RAJA COLLEGE OF ENGINEERING', "city": 'Tenkasi', "file": 'certs/046_A_JONI.pdf'},
+        {"sno": 47, "name": 'Gururaj', "inst": 'Manipal Institute of Technology', "city": 'Udupi', "file": 'certs/047_Gururaj.pdf'},
+        {"sno": 48, "name": 'Surya.N', "inst": "Kongu Art's and Science college (Autonomous)", "city": 'Erode', "file": 'certs/048_Surya_N.pdf'},
+        {"sno": 49, "name": 'Pradeepa', "inst": 'Kongu Arts And Science College (Autonomous)', "city": 'Erode', "file": 'certs/049_Pradeepa.pdf'},
+        {"sno": 50, "name": 'Aarthee S', "inst": 'Imayam college of Engineering', "city": 'Tiruchirappalli', "file": 'certs/050_Aarthee_S.pdf'},
+        {"sno": 51, "name": 'S.Shiny', "inst": 'Rohini college of Engineering', "city": 'Nagercoil', "file": 'certs/051_S_Shiny.pdf'},
+        {"sno": 52, "name": 'Bindhu M C', "inst": 'Presidency University', "city": 'Karnataka', "file": 'certs/052_Bindhu_M_C.pdf'},
+        {"sno": 53, "name": 'Vidhya S', "inst": 'Amrita Vishwa Vidyapeetham', "city": 'Nagercoil', "file": 'certs/053_Vidhya_S.pdf'},
+        {"sno": 54, "name": 'Sumithra RP', "inst": 'Amrita Vishwa Vidyapeetham', "city": 'Nagercoil', "file": 'certs/054_Sumithra_RP.pdf'},
+        {"sno": 55, "name": 'Iyappan M', "inst": 'St. Francis College', "city": 'Bengaluru', "file": 'certs/055_Iyappan_M.pdf'},
+        {"sno": 56, "name": 'Mohammadi Akheela Khanum', "inst": 'Presidency University', "city": 'Bangalore', "file": 'certs/056_Mohammadi_Akheela_Khanum.pdf'},
+        {"sno": 57, "name": 'Lipika Rajanandini Sahu', "inst": 'JAIN (Deemed to be University)', "city": 'Karnataka', "file": 'certs/057_Lipika_Rajanandini_Sahu.pdf'},
+        {"sno": 58, "name": 'INDULEKHA K V', "inst": 'NEHRU INSTITUTE OF INFORMATION TECHNOLOGY AND MANAGEMENT', "city": 'COIMBATORE', "file": 'certs/058_INDULEKHA_K_V.pdf'},
+        {"sno": 59, "name": 'Dhinesh A', "inst": 'Bharathidasan University', "city": 'Tiruchirappalli', "file": 'certs/059_Dhinesh_A.pdf'},
+        {"sno": 60, "name": 'P.YASODAI', "inst": 'DHANALAKSHMI SRINIVASAN UNIVERSITY', "city": 'TIRUCHIRAPPALLI', "file": 'certs/060_P_YASODAI.pdf'},
+        {"sno": 61, "name": 'SATHIA JEYA C', "inst": 'S.A COLLEGE OF ARTS & SCIENCE', "city": 'CHENNAI', "file": 'certs/061_SATHIA_JEYA_C.pdf'},
+        {"sno": 62, "name": 'Deepthi S', "inst": 'MIT', "city": 'Udupi', "file": 'certs/062_Deepthi_S.pdf'},
+        {"sno": 63, "name": 'Vijay Sai R', "inst": 'K.S.Rangasamy College of Technology', "city": 'Erode', "file": 'certs/063_Vijay_Sai_R.pdf'},
+        {"sno": 64, "name": 'Shiammala P N', "inst": 'Vels Institute of Science Technology and Advanced Studies (VISTAS)', "city": 'Chennai', "file": 'certs/064_Shiammala_P_N.pdf'},
+        {"sno": 65, "name": 'PUNITHAVATHI A', "inst": 'JAISHRIRAM ENGINEERING COLLEGE', "city": 'KANGAYAM', "file": 'certs/065_PUNITHAVATHI_A.pdf'},
+        {"sno": 66, "name": 'SARAVANAN.V', "inst": 'Mount Zion College of Engineering and Technology', "city": 'Pudukkottai', "file": 'certs/066_SARAVANAN_V.pdf'},
+        {"sno": 67, "name": 'SWARNA MUGI S', "inst": 'SARDAR RAJA COLLEGE OF ENGINEERING', "city": 'Tenkasi', "file": 'certs/067_SWARNA_MUGI_S.pdf'},
+        {"sno": 68, "name": 'Manju Lata Joshi', "inst": 'Poornima University', "city": 'Rajasthan', "file": 'certs/068_Manju_Lata_Joshi.pdf'},
+        {"sno": 69, "name": 'S SIVAKALAI', "inst": 'J P college of Arts and Science', "city": 'Tenkasi', "file": 'certs/069_S_SIVAKALAI.pdf'},
+        {"sno": 70, "name": 'A.JERALDINE RUBY', "inst": 'Dhanalakshmi Srinivasan University', "city": 'Tiruchirappalli', "file": 'certs/070_A_JERALDINE_RUBY.pdf'},
+        {"sno": 71, "name": 'R. Abinaya', "inst": 'Dhanalakshmi Srinivasan University', "city": 'Tiruchirappalli', "file": 'certs/071_R_Abinaya.pdf'},
+        {"sno": 72, "name": 'M.Subalakshmi', "inst": 'Bishop Heber College', "city": 'Tiruchirappalli', "file": 'certs/072_M_Subalakshmi.pdf'},
+        {"sno": 73, "name": 'Thangatharani T', "inst": 'Bishop Heber College', "city": 'Tiruchirappalli', "file": 'certs/073_Thangatharani_T.pdf'},
+        {"sno": 74, "name": 'S.P.Ramya', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/074_S_P_Ramya.pdf'},
+        {"sno": 75, "name": 'S.Shanmuga Priya', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/075_S_Shanmuga_Priya.pdf'},
+        {"sno": 76, "name": 'Jubilant J.Kizhakkethottam', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/076_Jubilant_J_Kizhakkethottam.pdf'},
+        {"sno": 77, "name": 'R Mekala', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/077_R_Mekala.pdf'},
+        {"sno": 78, "name": 'R Megiba Jasmine', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/078_R_Megiba_Jasmine.pdf'},
+        {"sno": 79, "name": 'R.Sheeba', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/079_R_Sheeba.pdf'},
+        {"sno": 80, "name": 'N.Saranya', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/080_N_Saranya.pdf'},
+        {"sno": 81, "name": 'Siron Anita Susan T', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/081_Siron_Anita_Susan_T.pdf'},
+        {"sno": 82, "name": 'K.R.Saranya', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/082_K_R_Saranya.pdf'},
+        {"sno": 83, "name": 'L.Josephine Usha', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/083_L_Josephine_Usha.pdf'},
+        {"sno": 84, "name": 'Y. Suganya', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/084_Y_Suganya.pdf'},
+        {"sno": 85, "name": 'R.Baskar', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/085_R_Baskar.pdf'},
+        {"sno": 86, "name": 'D.Deena Rose', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/086_D_Deena_Rose.pdf'},
+        {"sno": 87, "name": 'D.Seenivasan', "inst": 'SRM Institute of Science and Technology', "city": 'Tiruchirappalli', "file": 'certs/087_D_Seenivasan.pdf'},
+        {"sno": 88, "name": 'K.Sathiyalakshmi', "inst": 'Periyar Maniammai Institute of Science and Technology', "city": 'Thanjavur', "file": 'certs/088_K_Sathiyalakshmi.pdf'}
+];
+
+const tableBody = document.getElementById('tableBody');
+const searchInput = document.getElementById('searchInput');
+const emptyState = document.getElementById('emptyState');
+const visibleCount = document.getElementById('visibleCount');
+
+function downloadIcon(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>';
+}
+
+function render(list){
+  tableBody.innerHTML = list.map(p => `
+    <tr>
+      <td class="num">${p.sno}</td>
+      <td><a class="p-name" href="${p.file}" download>${p.name}</a></td>
+      <td class="p-inst">${p.inst}</td>
+      <td class="p-city">${p.city}</td>
+      <td class="action">
+        <a class="btn" href="${p.file}" download>
+          ${downloadIcon()}<span class="btn-label">Download</span>
+        </a>
+      </td>
+    </tr>
+  `).join('');
+  visibleCount.textContent = list.length;
+  emptyState.style.display = list.length === 0 ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  const filtered = q === '' ? participants : participants.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    p.inst.toLowerCase().includes(q) ||
+    p.city.toLowerCase().includes(q)
+  );
+  render(filtered);
+});
+
+render(participants);
+</script>
+
+</body>
+</html>
